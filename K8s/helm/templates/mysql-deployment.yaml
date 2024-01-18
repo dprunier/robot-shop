@@ -34,6 +34,13 @@ spec:
           requests:
             cpu: 100m
             memory: 700Mi
+        volumeMounts:
+          - name: datadir
+            mountPath: /data
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: data-mysql
       restartPolicy: Always
       {{- with .Values.mysql.affinity }}
       affinity:
@@ -47,3 +54,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-mysql
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: {{ .Values.mysql.storageClassName }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi

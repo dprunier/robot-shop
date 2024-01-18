@@ -31,6 +31,13 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
+        volumeMounts:
+          - name: datadir
+            mountPath: /var/lib/rabbitmq/mnesia
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: data-rabbitmq
       restartPolicy: Always
       {{- with .Values.rabbitmq.affinity }}
       affinity:
@@ -44,3 +51,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-rabbitmq
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: {{ .Values.rabbitmq.storageClassName }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi

@@ -30,6 +30,13 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
+        volumeMounts:
+          - name: datadir
+            mountPath: /data/db
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: data-mongodb
       restartPolicy: Always
       {{- with .Values.mongodb.affinity }}
       affinity:
@@ -43,3 +50,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-mongodb
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: {{ .Values.mongodb.storageClassName }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi

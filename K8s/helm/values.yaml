@@ -33,15 +33,21 @@ ocCreateRoute: false
 #   tolerations: []
 ######################################
 
-cart: {}
+cart:
+  # Storage class to use with cart deployment.
+  storageClassName: standard
 
 catalogue: {}
 
 dispatch: {}
 
-mongodb: {}
+mongodb:
+  # Storage class to use with mongodb deployment.
+  storageClassName: standard
 
-mysql: {}
+mysql:
+  # Storage class to use with mysql deployment.
+  storageClassName: standard
 
 payment:
   # Alternative payment gateway URL
@@ -49,7 +55,9 @@ payment:
   gateway: null
   #gateway: https://www.worldpay.com
 
-rabbitmq: {}
+rabbitmq:
+  # Storage class to use with rabbitmq deployment.
+  storageClassName: standard
 
 ratings: {}
 
